@@ -1,84 +1,75 @@
-## Pokémon MCP Server
+## Pokemon MCP Server 
 
 An MCP server exposing:
-- Pokémon Data resource (via PokeAPI)
+- Pokemon Data resource (via PokeAPI)
 - Battle Simulation tool (type matchups, damage, status effects)
+
+This project is a **Pokémon battle simulator** built using **MCP Server, Node.js, and Vite**.  
+It provides both a **backend API** to simulate battles and a **frontend UI** to visualize them.
 
 ### Requirements
 - Node.js 18+
 
-### Install
+### Features
+- Battle simulation between two Pokémons
+- Real-time updates of moves, HP, and winner
+- Frontend UI built with **Vite**.
+- Backend powered by **MCP Server (Node.js)**
+
+### Project Structure
+
+pokemon-battle-simulation/<br>
+├── Battle-Game/&nbsp;&nbsp;&nbsp;&nbsp;   &nbsp;&nbsp;               # Main project folder<br>
+├── dist/      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;               # Compiled frontend assets<br>
+├── src/                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      &nbsp;&nbsp;   # Source code<br>
+│   ├── web/            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;          # Frontend UI (Vite)<br>
+│   ├── api-bridge.js        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     # API bridge for backend<br>
+│   ├── package.json        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      # Project dependencies<br>
+│   └── ...                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       # Other source files<br>
+├── .gitignore            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;         # Git ignore rules<br>
+├── README.md               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       # Project documentation<br>
+├── package-lock.json        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      # npm lock file<br>
+├── package.json               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    # Project metadata and dependencies<br>
+├── tsconfig.json              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    # TypeScript configuration<br>
+└── update_claude_config.js     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   # Script to update Claude configuration<br>
+
+## Installation & Setup
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/Sparshgoyal123/pokemon-battle-simulation.git
+cd pokemon-battle-game/Battle-Game
+```
+
+### 2. Install dependencies
 ```bash
 npm install
 ```
 
-### Dev run (stdio)
-This server uses stdio transport. For quick local tests you can run:
+### 3.Run the Project
+- Run both backend + frontend together:
 ```bash
-npm run dev
+npm run ui
 ```
-It will wait for MCP client frames over stdio.
 
-### Build
+### 4. Open in browser
+  Go to:
 ```bash
-npm run build && npm start
+http://localhost:3002/
 ```
 
-### Resources
-- `resource://pokemon/data`
-  - Optional params: `{ "name": string }` or `{ "id": number }`
-  - Example request (MCP JSON-RPC, conceptual):
-```json
-{
-  "method": "resources/read",
-  "params": {
-    "uri": "resource://pokemon/data",
-    "arguments": { "name": "pikachu" }
-  },
-  "id": 1
-}
-```
-  - Example response excerpt:
-```json
-{
-  "id": 1,
-  "result": {
-    "id": 25,
-    "name": "pikachu",
-    "types": ["electric"],
-    "base_stats": { "hp": 35, "attack": 55, "defense": 40, "special_attack": 50, "special_defense": 50, "speed": 90 },
-    "abilities": ["static", "lightning-rod"],
-    "moves": [ { "name": "thunderbolt" }, ...],
-    "evolution_chain": ["pichu", "pikachu", "raichu"]
-  }
-}
-```
+## Claude Desktop Integration
+- The MCP Server is integrated with **Claude Desktop**, allowing **AI-assisted battle logic**.
+- Pokemon move choices and battle outcomes are AI-driven, making each simulation dynamic and realistic.
+- Backend communicates with Claude via the MCP protocol to fetch AI-powered decisions.
 
-If no arguments are passed, the resource returns an index of Pokémon names and a hint.
-
-### Tools
-- `simulate_battle`
-  - Params: `{ "pokemonA": string, "pokemonB": string }`
-  - Simulates a level-50 style, single-Pokémon battle using:
-    - Type effectiveness
-    - Damage formula (simplified)
-    - Speed-based turn order with paralysis speed penalty
-    - Status effects: paralysis (25% skip, speed halved), burn (6.25%/turn), poison (12.5%/turn)
-  - Returns: participants, detailed log, and winner name or `"draw"`.
-
-Example request (MCP JSON-RPC, conceptual):
-```json
-{
-  "method": "tools/call",
-  "params": {
-    "name": "simulate_battle",
-    "arguments": { "pokemonA": "charizard", "pokemonB": "blastoise" }
-  },
-  "id": 2
-}
-```
+### Tech Stack
+- **Frontend**: Vite + JavaScript
+- **Backend**: Node.js + MCP Server
+- **AI Integration**: Claude Desktop via MCP
+- **Package Manager**: npm
+  
 
 ### Notes
 - Uses PokeAPI live data with a 60s in-memory cache.
 - Move selection prefers super effective highest-power moves among the first 30 learned moves.
-- This is intended for LLM integration demonstrations, not a full competitive simulator.
